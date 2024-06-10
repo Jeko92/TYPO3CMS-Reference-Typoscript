@@ -543,27 +543,30 @@ userFunc
     :name: typolink-userFunc
     :type: :ref:`data-type-function-name`
 
-    This passes the link-data compiled by the typolink function to a user-
-    defined function for final manipulation.
+    This passes the link-data compiled by the :typoscript:`typolink` function
+    to a user-defined PHP function for final manipulation.
 
     The :php:`$content` variable passed to the user-function (first parameter) is
     an array with the keys "TYPE", "TAG", "url", "targetParams" and
     "aTagParams".
 
-    TYPE is an indication of link-kind: mailto, url, file, page
+    `TYPE` is an indication of link-kind: `mailto`, `url`, `file`, `page`
 
-    TAG is the full <A>-tag as generated and ready from the typolink
+    `TAG` is the full `<a>`-tag as generated and processed from the :typoscript:`typolink`
     function.
 
-    The actual tag value is constructed like this:
+    The actual tag value must be returned with an instance of :php:`LinkResultInterface`,
+    you can not use plain HTML. Examples:
 
     ..  code-block:: php
 
-        $contents = '<a href="' . $finalTagParts['url'] . '"'
-                   . $finalTagParts['targetParams']
-                   . $finalTagParts['aTagParams'] . '>';
+        // Specific URL string
+        return (new LinkResult(LinkService::TYPE_URL, 'https://typo3.org'))
+            ->withLinkText('I am a link to a fixed URL');
 
-    The userfunction must return an <A>-tag.
+        // or a specific page UID
+        return (new LinkResult(LinkService::TYPE_PAGE, 1701))
+            ->withLinkText('I am a link to page #1701');
 
 ..  index:: typolink; Resource references
 ..  _typolink-resource_references:
